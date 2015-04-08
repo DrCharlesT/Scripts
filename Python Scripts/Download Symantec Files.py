@@ -17,10 +17,6 @@ def main():
 	#Finds all of the HTTP links on the page
 	all_links = re.findall('"((http)s?://.*?)"',html)
 
-	#print all_links
-
-	#print "------------------------------------------------------------"
-
 	#Makes a list of just the information that is needed from the list of truples
 	list_of_links = [x[0] for x in all_links]
 
@@ -44,6 +40,7 @@ def main():
 	#Get the file name
 	for x in xrange(0, len(downloads)):
 		file_names.append(downloads[x].split('/')[-1])
+		x+=1
 
 	#Calls the function to get the MD5s
 	MD5_hashes = get_MD5(file_names)
@@ -57,10 +54,17 @@ def main():
 	#Compares the MD5 hashes
 	if compare_MD5(MD5_hashes,file_MD5_hashes):
 		for x in xrange(0, len(file_MD5_hashes)):
-			print MD5_hashes[x] + "   " + file_MD5_hashes[x]
+			textfile(MD5_hashes,file_names)
 	else:
 		print "MD5 hashes failed"
 
+def textfile(MD5_hashes, file_names):
+	#Creates the file MD5.txt
+	file = open("MD5.txt", "w")
+	#Writes tot he file
+	for x in xrange(0,len(file_names)):
+		file.write(MD5_hashes[x] + "\t" + file_names[x] + "\n")
+		x+=1
 
 
 def get_MD5(file_names):
@@ -69,7 +73,6 @@ def get_MD5(file_names):
 
 	#Runs through the website looking for the correct filename
 	for line in website:
-		#print line
 		if file_names[0] in line:
 			v5i32_hash = line[:32]
 		if file_names[1] in line:
@@ -96,7 +99,6 @@ def get_file_MD5(saved_file_names):
 				m.update(data)
 			#Adds the MD5 to a list of MD5s and makes it uppercase
 			file_MD5_hashes.append(m.hexdigest().upper())
-			print m.hexdigest()
 	#Returns the list of MD5 hashes
 	return file_MD5_hashes
 
@@ -117,7 +119,7 @@ def download_files(downloads):
 
 		#Makes a file name
 		file_name = url.split('/')[-1]
-		#If else is used for debugging in order to quit downloading the same file
+		#If else is used in order to quit downloading the same file
 		if os.path.isfile(file_name):
 			saved_file_names.append(file_name)
 			print "File " + file_name + " already exists"
