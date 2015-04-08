@@ -5,71 +5,78 @@ v5i32 = ""
 v5i63 = ""
 unix = ""
 
-#Opens the website
-website = urllib2.urlopen("http://www.symantec.com/security_response/definitions/download/detail.jsp?gid=sep")
+def main():	
+	#Opens the website
+	website = urllib2.urlopen("http://www.symantec.com/security_response/definitions/download/detail.jsp?gid=sep")
 
-html = website.read()
+	html = website.read()
 
-#Finds all of the HTTP links on the page
-all_links = re.findall('"((http)s?://.*?)"',html)
+	#Finds all of the HTTP links on the page
+	all_links = re.findall('"((http)s?://.*?)"',html)
 
-#print all_links
+	#print all_links
 
-#print "------------------------------------------------------------"
+	#print "------------------------------------------------------------"
 
-#Makes the Truples into a list of Truples
-list_of_t_links = list(all_links)
+	#Makes the Truples into a list of Truples
+	list_of_t_links = list(all_links)
 
-#print list_of_t_links
+	#print list_of_t_links
 
-#print "------------------------------------------------------------"
+	#print "------------------------------------------------------------"
 
-#Makes a list of just the information that is needed from the list of truples
-list_of_links = [x[0] for x in list_of_t_links]
+	#Makes a list of just the information that is needed from the list of truples
+	list_of_links = [x[0] for x in list_of_t_links]
 
-#Finds the 3 links that are wanted
-for x in xrange(0,len(list_of_links)):
-	if "v5i32" in list_of_links[x]:
-		v5i32 = list_of_links[x]
-		print list_of_links[x]
-	if "v5i64" in list_of_links[x]:
-		v5i64 = list_of_links[x]
-		print list_of_links[x]
-	if "-unix" in list_of_links[x]:
-		unix = list_of_links[x]
-		print list_of_links[x]
-	#print x
-	
-	x+=1	
+	#Finds the 3 links that are wanted
+	for x in xrange(0,len(list_of_links)):
+		if "v5i32" in list_of_links[x]:
+			v5i32 = list_of_links[x]
+			print list_of_links[x]
+		if "v5i64" in list_of_links[x]:
+			v5i64 = list_of_links[x]
+			print list_of_links[x]
+		if "-unix" in list_of_links[x]:
+			unix = list_of_links[x]
+			print list_of_links[x]
+		#print x
+		
+		x+=1	
 
-#Puts the 3 links into a list to be easily used in a loop
-downloads = [v5i32,v5i64,unix]
+	#Puts the 3 links into a list to be easily used in a loop
+	downloads = [v5i32,v5i64,unix]
 
-for x in xrange(0,3):	
-	#Gets the correct download link
-	url = downloads[x]
+	#Calls the function to download the files
+	#download_files(downloads)
 
-	#Makes a file name
-	file_name = url.split('/')[-1]
-	u = urllib2.urlopen(url)
-	f = open(file_name, 'wb')
-	meta = u.info()
-	file_size = int(meta.getheaders("Content-Length")[0])
+def download_files(downloads):		
+	for x in xrange(0,len(downloads)):	
+		#Gets the correct download link
+		url = downloads[x]
 
-	#Shows downloading progress
-	print "Downloading: %s Bytes: %s" % (file_name, file_size)
+		#Makes a file name
+		file_name = url.split('/')[-1]
+		u = urllib2.urlopen(url)
+		f = open(file_name, 'wb')
+		meta = u.info()
+		file_size = int(meta.getheaders("Content-Length")[0])
 
-	file_size_dl = 0
-	block_sz = 8192
-	while True:
-	    buffer = u.read(block_sz)
-	    if not buffer:
-	        break
+		#Shows downloading progress
+		print "Downloading: %s Bytes: %s" % (file_name, file_size)
 
-	    file_size_dl += len(buffer)
-	    f.write(buffer)
-	    status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
-	    status = status + chr(8)*(len(status)+1)
-	    print status,
+		file_size_dl = 0
+		block_sz = 8192
+		while True:
+		    buffer = u.read(block_sz)
+		    if not buffer:
+		        break
 
-	f.close()
+		    file_size_dl += len(buffer)
+		    f.write(buffer)
+		    status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
+		    status = status + chr(8)*(len(status)+1)
+		    print status,
+
+		f.close()
+
+main()
