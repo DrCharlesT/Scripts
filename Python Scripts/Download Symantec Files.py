@@ -28,13 +28,10 @@ def main():
 	for x in xrange(0,len(list_of_links)):
 		if "v5i32" in list_of_links[x]:
 			v5i32 = list_of_links[x]
-			print list_of_links[x]
 		if "v5i64" in list_of_links[x]:
 			v5i64 = list_of_links[x]
-			print list_of_links[x]
 		if "-unix" in list_of_links[x]:
 			unix = list_of_links[x]
-			print list_of_links[x]
 		#print x
 		x+=1	
 
@@ -47,7 +44,6 @@ def main():
 	#Get the file name
 	for x in xrange(0, len(downloads)):
 		file_names.append(downloads[x].split('/')[-1])
-		print file_names[x]
 
 	#Calls the function to get the MD5s
 	MD5_hashes = get_MD5(file_names)
@@ -75,17 +71,11 @@ def get_MD5(file_names):
 	for line in website:
 		#print line
 		if file_names[0] in line:
-			print line
 			v5i32_hash = line[:32]
-			print v5i32_hash
 		if file_names[1] in line:
-			print line
 			v5i64_hash = line[:32]
-			print v5i64_hash
 		if file_names[2] in line:
-			print line
 			unix_hash = line[:32]
-			print unix_hash
 	#Creates a list the hold the hashes
 	MD5_hashes = [v5i32_hash,v5i64_hash,unix_hash]
 
@@ -112,9 +102,6 @@ def get_file_MD5(saved_file_names):
 
 def compare_MD5(MD5_hashes,file_MD5_hashes):
 	#Compares the MD5 hashes, They will be in the same order
-	print MD5_hashes
-	print file_MD5_hashes
-
 	if MD5_hashes == file_MD5_hashes:
 		return True
 	else:
