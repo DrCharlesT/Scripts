@@ -18,15 +18,8 @@ def main():
 
 	#print "------------------------------------------------------------"
 
-	#Makes the Truples into a list of Truples
-	list_of_t_links = list(all_links)
-
-	#print list_of_t_links
-
-	#print "------------------------------------------------------------"
-
 	#Makes a list of just the information that is needed from the list of truples
-	list_of_links = [x[0] for x in list_of_t_links]
+	list_of_links = [x[0] for x in all_links]
 
 	#Finds the 3 links that are wanted
 	for x in xrange(0,len(list_of_links)):
