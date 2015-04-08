@@ -1,6 +1,7 @@
 import urllib2
 import re
 import hashlib
+import os
 
 v5i32 = ""
 v5i63 = ""
@@ -103,20 +104,22 @@ def get_file_MD5(saved_file_names):
 				if not data:
 					break
 				m.update(data)
-			#Adds the MD5 to a list of MD5s
-			file_MD5_hashes.append(m.hexdigest())
+			#Adds the MD5 to a list of MD5s and makes it uppercase
+			file_MD5_hashes.append(m.hexdigest().upper())
 			print m.hexdigest()
 	#Returns the list of MD5 hashes
 	return file_MD5_hashes
 
 def compare_MD5(MD5_hashes,file_MD5_hashes):
 	#Compares the MD5 hashes, They will be in the same order
+	print MD5_hashes
+	print file_MD5_hashes
+
 	if MD5_hashes == file_MD5_hashes:
 		return True
 	else:
 		return False
-	print MD5_hashes
-	print file_MD5_hashes	
+		
 
 
 def download_files(downloads):		
@@ -127,32 +130,37 @@ def download_files(downloads):
 
 		#Makes a file name
 		file_name = url.split('/')[-1]
-		u = urllib2.urlopen(url)
-		f = open(file_name, 'wb')
-		meta = u.info()
-		file_size = int(meta.getheaders("Content-Length")[0])
+		#If else is used for debugging in order to quit downloading the same file
+		if os.path.isfile(file_name):
+			saved_file_names.append(file_name)
+			print "File " + file_name + " already exists"
+		else:	
+			u = urllib2.urlopen(url)
+			f = open(file_name, 'wb')
+			meta = u.info()
+			file_size = int(meta.getheaders("Content-Length")[0])
 
-		#Shows downloading progress
-		print "Downloading: %s Bytes: %s" % (file_name, file_size)
+			#Shows downloading progress
+			print "Downloading: %s Bytes: %s" % (file_name, file_size)
 
-		file_size_dl = 0
-		block_sz = 8192
-		while True:
-			buffer = u.read(block_sz)
-			if not buffer:
-				break
+			file_size_dl = 0
+			block_sz = 8192
+			while True:
+				buffer = u.read(block_sz)
+				if not buffer:
+					break
 
-			file_size_dl += len(buffer)
-			f.write(buffer)
-			status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
-			status = status + chr(8)*(len(status)+1)
-			print status,
+				file_size_dl += len(buffer)
+				f.write(buffer)
+				status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
+				status = status + chr(8)*(len(status)+1)
+				print status,
 
-		#Closes the file
-		f.close()
+			#Closes the file
+			f.close()
 
-		#Saves all of the file names, this is mainly used if the filename is changed
-		saved_file_names.append(file_name)
+			#Saves all of the file names, this is mainly used if the filename is changed
+			saved_file_names.append(file_name)
 	
 	#Returns the filenames so they can be verified
 	return saved_file_names
