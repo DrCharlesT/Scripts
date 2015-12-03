@@ -5,21 +5,31 @@
 
 import os
 import time
+import shutil
 
 print "Start"
 
 #Variables
 oldFileName = "SyslogCatchAll.txt"
 newFileName = time.strftime("%Y%m%d") + "_" + oldFileName
+zippedName = time.strftime("%Y%m%d") + "_" + SyslogCatchAll.7z
 serverPath = "//server/"
 filePath = "//file/"
 
+print oldFileName
 print newFileName
+print zippedName
 print serverPath
 print filePath
+
 
 #Renames the file
 os.rename(filePath + oldFileName, filePath + newFileName)
 
+#Zips the folder
+
+
+#Moves the folder onto the server
+shutil.move(filePath + zippedName, serverPath + zippedName)
 
 print "End"
