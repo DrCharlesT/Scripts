@@ -27,7 +27,7 @@ print filePath
 os.rename(filePath + oldFileName, filePath + newFileName)
 
 #Zips the folder
-
+subprocess.call(["C:/7za.exe", 'a', '-t7z', '-m0=lzma', '-mx=9', '-mfb=64', '-md=32m', '-ms=on', filePath + zippedName, filePath + newFileName])
 
 #Moves the folder onto the server
 shutil.move(filePath + zippedName, serverPath + zippedName)
