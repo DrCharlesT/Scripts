@@ -6,21 +6,15 @@
 import os
 import time
 import shutil
+import subprocess
 
-print "Start"
 
 #Variables
 oldFileName = "SyslogCatchAll.txt"
 newFileName = time.strftime("%Y%m%d") + "_" + oldFileName
-zippedName = time.strftime("%Y%m%d") + "_" + SyslogCatchAll.7z
+zippedName = time.strftime("%Y%m%d") + "_" + "SyslogCatchAll.7z"
 serverPath = "//server/"
 filePath = "//file/"
-
-print oldFileName
-print newFileName
-print zippedName
-print serverPath
-print filePath
 
 
 #Renames the file
@@ -31,5 +25,3 @@ subprocess.call(["C:/7za.exe", 'a', '-t7z', '-m0=lzma', '-mx=9', '-mfb=64', '-md
 
 #Moves the folder onto the server
 shutil.move(filePath + zippedName, serverPath + zippedName)
-
-print "End"
